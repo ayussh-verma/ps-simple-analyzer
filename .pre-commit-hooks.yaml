@@ -1,0 +1,23 @@
+- id: ps-simple-analyzer
+  name: analyze PowerShell files
+  description: Statically analyzes PowerShell files using PSScriptAnalyzer (Invoke-ScriptAnalyzer)
+  language: docker
+  types: ["text"]
+  files: \.(ps1|.psm1|.psd1)$
+  entry: pwsh -Command
+  args: ["Invoke-SimpleAnalyzer"]
+  require_serial: true
+  additional_dependencies: []
+  minimum_pre_commit_version: 3.0.0
+
+- id: ps-simple-formatter
+  name: format PowerShell files
+  description: Format PowerShell files using PSScriptAnalyzer (Invoke-Formatter)
+  language: docker
+  types: ["text"]
+  files: \.(ps1|.psm1|.psd1)$
+  entry: pwsh -Command
+  args: ["Invoke-SimpleFormatter"]
+  require_serial: true
+  additional_dependencies: []
+  minimum_pre_commit_version: 3.0.0

@@ -1,0 +1,57 @@
+# We need to build the docker image and publish
+
+name: Publish Docker image
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  get-sha-tag:
+    runs-on: ubuntu-24.04
+    timeout-minutes: ${{ fromJSON(vars.SHORT_TIMEOUT) }}
+    outputs:
+      tag: ${{ steps.sha-tag.outputs.sha-tag }}
+    steps:
+      - name: Get the short SHA tag
+        id: sha-tag
+        run: |
+          tag=$(cut -c 1-7 <<< $GITHUB_SHA)
+          echo "sha-tag=$tag" >> $GITHUB_OUTPUT
+
+  build-and-publish:
+    needs: get-sha-tag
+
+    runs-on: ubuntu-24.04
+    timeout-minutes: ${{ fromJSON(vars.MODERATE_TIMEOUT) }}
+    permissions:
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Login to Github Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          cache-from: type=registry,ref=ghcr.io/ayussh-verma/ps-simple-analyzer:latest
+          cache-to: type=inline
+          tags: |
+            ghcr.io/ayussh-verma/ps-simple-analyzer:latest
+            ghcr.io/ayussh-verma/ps-simple-analyzer:${{ needs.get-sha-tag.outputs.tag }}
+  
