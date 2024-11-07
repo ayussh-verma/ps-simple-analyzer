@@ -1,19 +1,29 @@
 - id: ps-simple-analyzer
   name: analyze PowerShell files
   description: Statically analyzes PowerShell files using PSScriptAnalyzer (Invoke-ScriptAnalyzer)
-  language: docker
+  language: docker_image
   types: ["text"]
   files: \.(ps1|.psm1|.psd1)$
-  entry: pwsh -Command Invoke-SimpleAnalyzer
+  entry: ghcr.io/ayussh-verma/ps-simple-analyzer pwsh -Command Invoke-SimpleAnalyzer
   require_serial: true
   minimum_pre_commit_version: 3.0.0
 
 - id: ps-simple-formatter
   name: format PowerShell files
   description: Format PowerShell files using PSScriptAnalyzer (Invoke-Formatter)
-  language: docker
+  language: docker_image
   types: ["text"]
   files: \.(ps1|.psm1|.psd1)$
-  entry: pwsh -Command Invoke-SimpleFormatter
+  entry: ghcr.io/ayussh-verma/ps-simple-analyzer pwsh -Command Invoke-SimpleFormatter
+  require_serial: true
+  minimum_pre_commit_version: 3.0.0
+
+- id: ps-simple-github
+  name: analyze PowerShell files (github output)
+  description: Statically analyzes PowerShell files using PSScriptAnalyzer (Invoke-ScriptAnalyzer)
+  language: docker_image
+  types: ["text"]
+  files: \.(ps1|.psm1|.psd1)$
+  entry: ghcr.io/ayussh-verma/ps-simple-analyzer pwsh -Command Invoke-SimpleAnalyzer -Format github
   require_serial: true
   minimum_pre_commit_version: 3.0.0
