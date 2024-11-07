@@ -4,10 +4,8 @@
   language: docker
   types: ["text"]
   files: \.(ps1|.psm1|.psd1)$
-  entry: pwsh -Command
-  args: ["Invoke-SimpleAnalyzer"]
+  entry: pwsh -Command Invoke-SimpleAnalyzer
   require_serial: true
-  additional_dependencies: []
   minimum_pre_commit_version: 3.0.0
 
 - id: ps-simple-formatter
@@ -16,8 +14,6 @@
   language: docker
   types: ["text"]
   files: \.(ps1|.psm1|.psd1)$
-  entry: pwsh -Command
-  args: ["Invoke-SimpleFormatter"]
+  entry: pwsh -Command Invoke-SimpleFormatter
   require_serial: true
-  additional_dependencies: []
   minimum_pre_commit_version: 3.0.0
